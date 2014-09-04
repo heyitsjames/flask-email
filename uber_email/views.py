@@ -1,7 +1,7 @@
 import re
 from uber_email import app
 from flask import jsonify, request, abort
-from .models import Email
+from .models import EmailModel
 
 @app.errorhandler(400)
 def uber_email_400(error):
@@ -11,9 +11,10 @@ def uber_email_400(error):
 @app.route('/api/emails', methods=['POST'])
 def send_email():
     data = {} if request.json == None else request.json
-    model = Email(data=data)
+    model = EmailModel(data)
 
     if model.is_valid():
+        
         return jsonify({ 'message': 'Email sent'}), 201
     else:
         abort(400, model.field_errors)
