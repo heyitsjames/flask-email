@@ -1,4 +1,4 @@
-import re
+import re, json
 from uber_email import app
 from flask import jsonify, request, abort
 from .models import EmailModel
@@ -14,7 +14,10 @@ def send_email():
     model = EmailModel(data)
 
     if model.is_valid():
-        
-        return jsonify({ 'message': 'Email sent'}), 201
+        response = model.post_message(data)
+        if response.ok:
+            return jsonify({ 'message': 'Message sent'}), 200
+        else:
+            return jsonify({'message': 'Message failed', 'reason': response.json()}), 400
     else:
         abort(400, model.field_errors)

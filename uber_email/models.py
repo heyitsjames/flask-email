@@ -1,5 +1,10 @@
 import re
+import requests
+import json
+from uber_email import app
 from .utils import strip_tags
+import payload_handlers
+
 
 class Model(object):
     # Model base class
@@ -17,7 +22,6 @@ class Model(object):
         # this is a dumb place to put this
         self.clean()
 
-        print(self.data['body'])
         for key, value in self.fields.iteritems():
             if key not in self.data and value == 'required':
                 _field_errors[key] = self.FIELD_REQUIRED_MSG
@@ -44,7 +48,7 @@ class Model(object):
 class EmailModel(Model):
 
     def __init__(self, *args, **kwargs):
-        super(Email, self).__init__(*args, **kwargs)
+        super(EmailModel, self).__init__(*args, **kwargs)
 
     # There's really no good way to completely validate an e-mail, but
     # this simple regex check does the trick for most obvious scenarios
@@ -58,6 +62,20 @@ class EmailModel(Model):
         'subject': 'required',
         'body': 'required',
     }
+
+    def post_message(self, data):
+        default_mailer = app.config['DEFAULT_MAILER']
+        settings = app.config['MAILER_SETTINGS'][default_mailer]
+        get_payload = 'prepare_{0}_payload'.format(default_mailer)
+
+        if (hasattr(payload_handlers, get_payload) and 
+            callable(getattr(payload_handlers, get_payload))):
+                auth, payload = getattr(payload_handlers, 
+                                        get_payload)(data, settings)
+        response = requests.post(settings['url'], 
+                                 auth=auth, 
+                                 data=payload)
+        return response
 
     def clean(self):
         # strip the tags from the body in self.data

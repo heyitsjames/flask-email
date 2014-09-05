@@ -1,4 +1,0 @@
-DEBUG = True
-
-MANDRILL_API_KEY = '5SGhFGKPpCk7cx8qhp3j-w'
-MAILGUN_API_KEY = 'key-b6e6468eeca7f25c18f26c7beaf81ec3'
