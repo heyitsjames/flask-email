@@ -26,11 +26,12 @@ class Model(object):
             if key not in self.data and value == 'required':
                 _field_errors[key] = self.FIELD_REQUIRED_MSG
 
-            validator = 'validate_{0}'.format(key)
-            if hasattr(self, validator) and callable(getattr(self, validator)):
-                msg = getattr(self, validator)(self.data[key])
-                if msg:
-                    _field_errors[key] = msg
+            else:
+                validator = 'validate_{0}'.format(key)
+                if hasattr(self, validator) and callable(getattr(self, validator)):
+                    msg = getattr(self, validator)(self.data[key])
+                    if msg:
+                        _field_errors[key] = msg
 
         return _field_errors if len(_field_errors.keys()) > 0 else None
 
@@ -49,6 +50,9 @@ class EmailModel(Model):
 
     def __init__(self, *args, **kwargs):
         super(EmailModel, self).__init__(*args, **kwargs)
+        self.default_mailer = app.config['DEFAULT_MAILER']
+        self.mail_settings = app.config['MAILER_SETTINGS'][self.default_mailer]
+
 
     # There's really no good way to completely validate an e-mail, but
     # this simple regex check does the trick for most obvious scenarios
@@ -63,16 +67,22 @@ class EmailModel(Model):
         'body': 'required',
     }
 
-    def post_message(self, data):
-        default_mailer = app.config['DEFAULT_MAILER']
-        settings = app.config['MAILER_SETTINGS'][default_mailer]
-        get_payload = 'prepare_{0}_payload'.format(default_mailer)
+    def prepare_payload(self):
+        get_payload = 'prepare_{0}_payload'.format(self.default_mailer)
 
         if (hasattr(payload_handlers, get_payload) and 
             callable(getattr(payload_handlers, get_payload))):
                 auth, payload = getattr(payload_handlers, 
-                                        get_payload)(data, settings)
-        response = requests.post(settings['url'], 
+                                        get_payload)(self.data, self.mail_settings)
+
+        return auth, payload
+
+    def post_message(self, auth=None, payload=None):
+        if auth == None or payload == None:
+            auth, payload = self.prepare_payload()
+        print(auth)
+        print(payload)
+        response = requests.post(self.mail_settings['url'], 
                                  auth=auth, 
                                  data=payload)
         return response
