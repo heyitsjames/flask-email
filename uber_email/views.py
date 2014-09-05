@@ -14,7 +14,7 @@ def send_email():
     model = EmailModel(data)
 
     if model.is_valid():
-        response = model.post_message(data)
+        response = model.post_message()
         if response.ok:
             return jsonify({ 'message': 'Message sent'}), 200
         else:
