@@ -72,4 +72,5 @@ One decision I made was to use as few non-standard frameworks and libraries as p
 2. The post_message function inside my EmailModel is rather brittle; I'm not doing much error handling if the response completely blows up.
 3. It would have been cool to add optional fields in the Model, right now the 'required' value for each field key is superfluous; It is never used. I had it in my mind to build in logic to handle optional paramaters, but never got around to it.
 4. My testing suite could really use some work. I desperately desire to learn how to test well. My current job and employer don't hold testing or the time it takes in much regard, so I'm not 100% sure what I'm doing. I'd love to be part of a company where testing is more of a first-class citizen so I can learn how to do it, and do it well.
+5. There is very high coupling between the `fields` in the Model and the `payload_handlers.py` methods. It would have been better to make a few "rules" concerning how the JSON structure is supposed to be laid out. The current approach makes the app much less DRY.
 
