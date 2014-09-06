@@ -37,6 +37,28 @@ The test suite can be run by calling
 
     python uber_email_tests.py
     
+
+### How to use
+
+Once your server is running by executing the `runserver.py` script, it should be running on `http://localhost:5000`.
+You may then hit the api endpoint `/api/emails` via POST. The following fields, are required:
+
+- ‘to’ ­ The email address to send to
+- ‘to_name’ ­ The name to accompany the email
+- ‘from’ ­ The email address in the from and reply fields
+- ‘from_name’ ­ the name to accompany the from/reply emails
+- ‘subject’ ­ The subject line of the email
+- ‘body’ ­ the HTML body of the email
+
+Currently, all HTML will be stripped out of the `body` field. Only plain text is supported.
+
+An example cURL to the `/api/emails` endpoint:
+
+    curl -H "Content-Type: application/json" \
+    http://localhost:5000/api/emails \
+    -d '{"to": "email@email.com", "from": "email@another.email.com", "body": "<h1> Body</h1><span> This is a message.</span>", "from_name": "Alice", "to_name": "Bob", "subject": "Did you hear about Eve?"}'
+
+    
     
 ### Design decisions
   
