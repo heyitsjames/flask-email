@@ -1,15 +1,15 @@
 import os
-import uber_email
+import flask_email
 import unittest
 import tempfile
 
-from uber_email import models, views
+from flask_email import models, views
 
-class UberEmailTestCase(unittest.TestCase):
+class FlaskEmailTestCase(unittest.TestCase):
 
     def setUp(self):
-        uber_email.app.config['TESTING'] = True
-        self.app = uber_email.app.test_client()
+        flask_email.app.config['TESTING'] = True
+        self.app = flask_email.app.test_client()
 
         self.good_data =  {
             'to': 'email@mail.com',
@@ -64,7 +64,7 @@ class UberEmailTestCase(unittest.TestCase):
 
     # test post_message receives a 200
     def test_post_message_success_mandrill(self):
-        uber_email.app.config['DEFAULT_MAILER'] = 'mandrill'
+        flask_email.app.config['DEFAULT_MAILER'] = 'mandrill'
         model = models.EmailModel(self.good_data)
         
         assert model.is_valid()
@@ -73,7 +73,7 @@ class UberEmailTestCase(unittest.TestCase):
         assert r.status_code == 200
 
     def test_post_message_success_mailgun(self):
-        uber_email.app.config['DEFAULT_MAILER'] = 'mailgun'
+        flask_email.app.config['DEFAULT_MAILER'] = 'mailgun'
         model = models.EmailModel(self.good_data)
         
         assert model.is_valid()
@@ -83,21 +83,21 @@ class UberEmailTestCase(unittest.TestCase):
 
     # test post_message fails with bad data
     def test_post_message_failure_mandrill(self):
-        uber_email.app.config['DEFAULT_MAILER'] = 'mandrill'
+        flask_email.app.config['DEFAULT_MAILER'] = 'mandrill'
         model = models.EmailModel(self.good_data)
         
         assert model.is_valid()
-        auth = ('key', uber_email.app.config['MANDRILL_API_KEY'])
+        auth = ('key', flask_email.app.config['MANDRILL_API_KEY'])
         payload = {'nothing': 'here'}
         r = model.post_message(auth=auth, payload=payload)
         assert not r.ok
 
     def test_post_message_failure_mailgun(self):
-        uber_email.app.config['DEFAULT_MAILER'] = 'mailgun'
+        flask_email.app.config['DEFAULT_MAILER'] = 'mailgun'
         model = models.EmailModel(self.good_data)
         
         assert model.is_valid()
-        auth = ('key', uber_email.app.config['MAILGUN_API_KEY'])
+        auth = ('key', flask_email.app.config['MAILGUN_API_KEY'])
         payload = {'nothing': 'here'}
         r = model.post_message(auth=auth, payload=payload)
         assert not r.ok

@@ -1,10 +1,10 @@
 import re, json
-from uber_email import app
+from flask_email import app
 from flask import jsonify, request, abort
 from .models import EmailModel
 
 @app.errorhandler(400)
-def uber_email_400(error):
+def flask_email_400(error):
     response = jsonify(message=error.description, code=error.code)
     return response
 

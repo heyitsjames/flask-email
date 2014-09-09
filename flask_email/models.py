@@ -1,7 +1,7 @@
 import re
 import requests
 import json
-from uber_email import app
+from flask_email import app
 from .utils import strip_tags
 import payload_handlers
 
