@@ -1,6 +1,6 @@
-## Uber Email
+## Flask Email
 
-This is a simple app that exposes a REST endpoint and allows one to send an email via that endpoint. Mandrill and Mailgun are used as the transport backends.
+This is a simple app (for learning purposes) that exposes a REST endpoint and allows one to send an email via that endpoint. Mandrill and Mailgun are used as the transport backends.
 
 ### To install:
 
