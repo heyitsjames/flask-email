@@ -57,20 +57,3 @@ An example cURL to the `/api/emails` endpoint:
     curl -H "Content-Type: application/json" \
     http://localhost:5000/api/emails \
     -d '{"to": "email@email.com", "from": "email@another.email.com", "body": "<h1> Body</h1><span> This is a message.</span>", "from_name": "Alice", "to_name": "Bob", "subject": "Did you hear about Eve?"}'
-
-    
-    
-### Design decisions
-  
-I chose Python/Flask as my language and framework for a few reasons. Firstly, I know Python and am fairly productive in it. Secondly, I had never used Flask in my life, but I heard that's what a good portion of Uber is built upon, so I decided to learn it. I can say I fully enjoyed myself.
-
-One decision I made was to use as few non-standard frameworks and libraries as possible, for learning purposes. With the exception of the requests module and Flask, I stuck rather stringently to that end. I ended up creating my own Email Model, complete with field validators and other helper methods. This ended up cleaning up the actual views quite nicely, and provided a good decoupling of logic. And it was pretty fun to write.
-
-### Things I could have done better
-
-1. The model `clean()` method in my `EmailModel` is in a strange spot. I would have liked to rework how the overall validation flow goes so that it was in a more obvious and sane place
-2. The post_message function inside my EmailModel is rather brittle; I'm not doing much error handling if the response completely blows up.
-3. It would have been cool to add optional fields in the Model, right now the 'required' value for each field key is superfluous; It is never used. I had it in my mind to build in logic to handle optional paramaters, but never got around to it.
-4. My testing suite could really use some work. I desperately desire to learn how to test well. My current job and employer don't hold testing or the time it takes in much regard, so I'm not 100% sure what I'm doing. I'd love to be part of a company where testing is more of a first-class citizen so I can learn how to do it, and do it well.
-5. There is very high coupling between the `fields` in the Model and the `payload_handlers.py` methods. It would have been better to make a few "rules" concerning how the JSON structure is supposed to be laid out. The current approach makes the app much less DRY.
-
