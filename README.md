@@ -14,7 +14,7 @@ Next, pip install from the requirements.txt in the project root:
 
     pip install -r requirements.txt
     
-Everything should be installed by now. Now, open up `uber_email/default_settings.py` and add your Mandrill and Mailgun configs in these variables:  
+Everything should be installed by now. Now, open up `flask_email/default_settings.py` and add your Mandrill and Mailgun configs in these variables:  
 
     MANDRILL_API_KEY = '<your mandrill key here>'
     MAILGUN_API_KEY = '<your mailgun key here>'
@@ -24,18 +24,18 @@ You can run the application via runserver.py:
 
     python runserver.py
   
-By default, the server is running with production settings. To run in development mode, simply open up `uber_email/__init__.py` and change the following line:
+By default, the server is running with production settings. To run in development mode, simply open up `flask_email/__init__.py` and change the following line:
 
-    app.config.from_object('uber_email.production_settings')
+    app.config.from_object('flask_email.production_settings')
 
 To be
 
-    app.config.from_object('uber_email.default_settings')
+    app.config.from_object('flask_email.default_settings')
     
     
 The test suite can be run by calling
 
-    python uber_email_tests.py
+    python flask_email_tests.py
     
 
 ### How to use
