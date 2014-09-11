@@ -1,3 +1,3 @@
-from uber_email import app
+from flask_email import app
 
 app.run()
